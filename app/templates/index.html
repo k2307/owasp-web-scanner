@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>OWASP Web Scanner</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 80%;
+            margin: auto;
+            padding: 40px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #38bdf8;
+        }
+
+        .card {
+            background: #1e293b;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.4);
+            margin-top: 30px;
+        }
+
+        input {
+            width: 80%;
+            padding: 12px;
+            border-radius: 6px;
+            border: none;
+            margin-right: 10px;
+        }
+
+        button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            background: #38bdf8;
+            color: black;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0ea5e9;
+        }
+
+        .high { color: #ef4444; }
+        .medium { color: #facc15; }
+        .low { color: #22c55e; }
+
+        .issue {
+            margin-top: 15px;
+            padding: 10px;
+            background: #334155;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>🛡 OWASP Web Application Scanner</h1>
+
+    <div class="card">
+        <form method="POST">
+            <input type="text" name="target" placeholder="https://example.com" required>
+            <button type="submit">Start Scan</button>
+        </form>
+    </div>
+
+    {% if result %}
+    <div class="card">
+        <h2>Scan Results</h2>
+        <p><strong>Target:</strong> {{ result.target }}</p>
+        <p><strong>Overall Risk:</strong>
+            <span class="{{ result.risk|lower }}">{{ result.risk }}</span>
+        </p>
+
+        {% for issue in result.issues %}
+        <div class="issue">
+            <strong>{{ issue.type }}</strong><br>
+            OWASP Category: {{ issue.category }}<br>
+            Severity:
+            <span class="{{ issue.severity|lower }}">
+                {{ issue.severity }}
+            </span><br>
+            Evidence: {{ issue.detail }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+</body>
+</html>

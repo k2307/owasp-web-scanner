@@ -1,55 +1,71 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>OWASP Web Scanner</title>
+    <title>OWASP Security Scanner</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background: #0f172a;
-            color: #e2e8f0;
             margin: 0;
-            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0b1120;
+            color: #e5e7eb;
         }
 
-        .container {
-            width: 80%;
-            margin: auto;
-            padding: 40px;
+        .navbar {
+            background: #111827;
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #1f2937;
         }
 
-        h1 {
-            text-align: center;
+        .navbar h2 {
+            margin: 0;
             color: #38bdf8;
         }
 
+        .container {
+            max-width: 900px;
+            margin: auto;
+            padding: 40px 20px;
+        }
+
         .card {
-            background: #1e293b;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0,0,0,0.4);
-            margin-top: 30px;
+            background: #111827;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 0 25px rgba(0,0,0,0.5);
+            margin-bottom: 30px;
         }
 
         input {
-            width: 80%;
-            padding: 12px;
-            border-radius: 6px;
+            width: 70%;
+            padding: 14px;
+            border-radius: 8px;
             border: none;
-            margin-right: 10px;
+            font-size: 16px;
         }
 
         button {
-            padding: 12px 20px;
+            padding: 14px 22px;
+            border-radius: 8px;
             border: none;
-            border-radius: 6px;
             background: #38bdf8;
-            color: black;
             font-weight: bold;
             cursor: pointer;
+            font-size: 15px;
+            margin-left: 10px;
         }
 
         button:hover {
             background: #0ea5e9;
+        }
+
+        .risk-box {
+            font-size: 18px;
+            font-weight: bold;
         }
 
         .high { color: #ef4444; }
@@ -57,45 +73,96 @@
         .low { color: #22c55e; }
 
         .issue {
+            background: #1f2937;
+            padding: 15px;
+            border-radius: 8px;
             margin-top: 15px;
-            padding: 10px;
-            background: #334155;
-            border-radius: 6px;
         }
+
+        .issue h4 {
+            margin: 0 0 8px 0;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 13px;
+            color: #9ca3af;
+            border-top: 1px solid #1f2937;
+            margin-top: 40px;
+        }
+
+        .disclaimer {
+            background: #1e293b;
+            padding: 15px;
+            border-left: 4px solid #facc15;
+            margin-bottom: 25px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
     </style>
 </head>
 <body>
+
+<div class="navbar">
+    <h2>🛡 OWASP Web Security Scanner</h2>
+</div>
+
 <div class="container">
-    <h1>🛡 OWASP Web Application Scanner</h1>
 
     <div class="card">
+
+        <div class="disclaimer">
+            ⚠ <strong>Authorized Use Only:</strong><br>
+            This tool is intended strictly for authorized security testing and educational purposes.
+            Do NOT scan systems without explicit permission. Unauthorized scanning may be illegal.
+        </div>
+
         <form method="POST">
             <input type="text" name="target" placeholder="https://example.com" required>
             <button type="submit">Start Scan</button>
         </form>
+
     </div>
 
     {% if result %}
     <div class="card">
-        <h2>Scan Results</h2>
+        <h3>Scan Results</h3>
         <p><strong>Target:</strong> {{ result.target }}</p>
-        <p><strong>Overall Risk:</strong>
-            <span class="{{ result.risk|lower }}">{{ result.risk }}</span>
+
+        <p class="risk-box">
+            Overall Risk:
+            <span class="{{ result.risk|lower }}">
+                {{ result.risk }}
+            </span>
         </p>
 
         {% for issue in result.issues %}
         <div class="issue">
-            <strong>{{ issue.type }}</strong><br>
-            OWASP Category: {{ issue.category }}<br>
-            Severity:
-            <span class="{{ issue.severity|lower }}">
-                {{ issue.severity }}
-            </span><br>
-            Evidence: {{ issue.detail }}
+            <h4>{{ issue.type }}</h4>
+            <p><strong>OWASP Category:</strong> {{ issue.category }}</p>
+            <p><strong>Severity:</strong>
+                <span class="{{ issue.severity|lower }}">
+                    {{ issue.severity }}
+                </span>
+            </p>
+            <p><strong>Evidence:</strong> {{ issue.detail }}</p>
         </div>
         {% endfor %}
+
+        {% if not result.issues %}
+        <p style="color:#22c55e;">No major vulnerabilities detected.</p>
+        {% endif %}
+
     </div>
     {% endif %}
+
 </div>
+
+<div class="footer">
+    © 2026 OWASP Scanner | Built for Cybersecurity Learning & Research
+</div>
+
 </body>
 </html>
